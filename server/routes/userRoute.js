@@ -1,17 +1,24 @@
 import express from "express";
+import path from "path";
 
-import multer from 'multer';
-import { create, deleteUser, getAll, getOne, update } from "../controller/userController.js";
+import multer from "multer";
+import {
+  create,
+  deleteUser,
+  getAll,
+  getOne,
+  update,
+} from "../controller/userController.js";
 
 const route = express.Router();
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -19,7 +26,7 @@ const upload = multer({ storage: storage });
 route.post("/create", upload.single("profilePicture"), create);
 route.get("/getall", getAll);
 route.get("/getone/:id", getOne);
-route.put("/update/:id", update);
+route.put("/update/:id", upload.single("profilePicture"), update);
 route.delete("/delete/:id", deleteUser);
 
 export default route;
